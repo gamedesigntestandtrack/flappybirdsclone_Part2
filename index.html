@@ -1,0 +1,86 @@
+ <body style="height: 100vh; background: #111; text-align: center;">
+  <canvas id="c" width="400" height="400"></canvas>
+  
+
+          
+  <script>
+      //set up context
+    
+    context = c.getContext("2d");
+    //create bird
+    const bird = new Image();
+    bird.src = "bird.png";
+    //create variables
+    var canvasSize = 400;
+    var birdSize=30;
+    var birdX = 0; //starting position of bird on x axis
+    var birdY =200; //starting position of bird on y axis
+    var birdDY = 0; //movement to start with = none
+    //set score
+    var score = 0;
+    var interval = 30; //the speed at which the game is played
+      
+    //Makes the bird go UP > a simpler way of writing the below is: c.onclick = () => (birdDY = 9) ;
+     c.addEventListener("click", function(){ 
+         birdDY = 9; 
+	}
+      );     
+      
+    //PIPE VARIABLES
+    var pipeX=400; //starting position of the pipe (x axis)
+    var pipeWidth=24;
+    var pipeGap=200; //gap width
+    var topPipeBottomY=24; // starting position of the bottom (y) of what appears to be the top pipe.
+      
+      
+      setInterval(() => {
+      context.fillStyle = "skyblue";
+      context.fillRect(0,0,canvasSize,canvasSize); // Draw sky
+      birdY -= birdDY -= 0.5; // Gravity
+      context.drawImage(bird, birdX, birdY, birdSize, birdSize); // Draw bird (multiply the birdSize by a number to adjust size)
+      context.fillStyle = "black";
+      context.fillText(`Flappy Birds`, 170, 10); //x and y
+      context.fillText(`Score: ${score++}`,350, 380); // Draw score
+          
+    //DRAW PIPES    
+      context.fillStyle="green";
+      context.fillRect(pipeX,0,pipeWidth,topPipeBottomY); //top pipe     
+      context.fillRect(pipeX, topPipeBottomY + pipeGap, pipeWidth, canvasSize); // Draw bottom pipe
+      
+      pipeX -= 8; // Move pipe
+     
+
+          
+          /*a && b evaluates to true if and only if both a and b are truthy. This means if a is falsey, the expression will evaluate to false regardless of bs value, and JS therefore skips it. If a is truthy however, JS must evaluate b, which makes it execute the two wrapped assignments (the value of an assignment statement is the value of the part to the right of the =) */
+          
+          if (pipeX < -pipeWidth) { 
+            pipeX = canvasSize;
+            topPipeBottomY = pipeGap * Math.random();
+        }
+          
+       /*   
+        (((birdY < topPipeBottomY || birdY > topPipeBottomY + pipeGap) && pipeX < birdSize * (524/374))// Bird hit pipe?
+       || birdY > canvasSize) && // Bird falls off screen
+      ((birdDY = 0), (birdY = 200), (pipeX = canvasSize), (score = 0),(alert("boo"))); 
+      */
+
+      //if top of bird is less than Y 24
+      //and if birdY is>top of the bottom of the top pip+random gap 
+      //AND if pipex position is less than birdsize (to left)
+          //AND birdY is greater than 400 (off screen)
+          //reset
+          
+      if (birdY<topPipeBottomY || birdY > (topPipeBottomY + pipeGap) && pipeX < birdSize || birdY > canvasSize){
+          birdDY=0;
+          birdY=200;
+          pipeX=canvasSize;
+          score=0;
+          alert("Boo");
+         
+      }
+      
+       
+    }, interval)
+  </script>
+</body>
+ 
